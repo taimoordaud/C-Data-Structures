@@ -2,103 +2,105 @@
 #include<iostream>
 using namespace std;
 
-template<class T>
-class Node {
+class Node 
+{
 public:
-	T data;
-	Node<T>* next;
-	Node<T>* pre;
+	int data;
+	Node* next;
+	Node* prev;
 };
 
-template<class T>
-class DoubleList {
-protected:
-    Node<T>* head;
-    Node<T>* tail;
+class DoublyLL
+{
+	Node* head;
+
+	Node* createNode(int val)
+	{
+		Node* temp = new Node;
+		temp->data = val;
+		temp->next = nullptr;
+		temp->prev = nullptr;
+		return temp;
+	}
 public:
-	DoubleList()
+	DoublyLL()
 	{
-        head = nullptr;
-        tail = nullptr;
+		head = nullptr;
 	}
-	void insert(T val)
+	void insertAtEnd(int val)
 	{
-        Node<T>* temp = new Node<T>;
-
-        temp->data = val;
-        temp->next = nullptr;
-        temp->pre = nullptr;
-
-        if (head == nullptr)
-        {
-            head = temp;
-            head->next =head;
-            head->pre = head;
-            tail = head;
-        }
-        else
-        {
-            tail->next = temp;
-            temp->pre = tail;
-            temp->next = head;
-            head->pre = temp;
-            tail = temp;
-        }
+		Node* newNode = createNode(val);
+		if (head == nullptr)
+		{
+			head = newNode;
+		}
+		else
+		{
+			Node* itr = head;
+			while (itr->next != nullptr)
+				itr = itr->next;
+			newNode->prev = itr;
+			itr->next = newNode;
+		}
 	}
 
-    T front()
-    {
-        if (head != nullptr)
-            return head->data;
-        else
-        {
-            cout << "List is Empty\n";
-            return 0;
-        }
-    }
-    T rear()
-    {
-        if (head != nullptr)
-            return tail->data;
-        else
-        {
-            cout << "List is Empty\n";
-            return 0;
-        }
-    }
+	void insertAtFront(int val)
+	{
+		Node* newNode = createNode(val);
+		if (head == nullptr)
+		{
+			head = newNode;
+		}
+		else
+		{
+			newNode->next = head;
+			head = newNode;
+		}
+	}
 
-    T delet()
-    {
-        Node<T>* temp = head;
-
-        if (head == nullptr) 
-        {
-            cout << "List is Empty\n";
-            return 0;
-        }
-        else 
-        {
-            head = head->next;
-            tail->next = head;
-            head->pre = tail;
-
-            return temp->data;
-        }
-    }
-
-    void display()
-    {
-        Node<T>* itr = head;
-        if (head != nullptr)
-        {
-            do
-            {
-                cout << itr->data << " ";
-                itr = itr->next;
-            } while (itr != head);
-        }
-        else {
-            cout << "List is Empty\n";
-        }
-    }
+	void DeleteFromFront()
+	{
+		if (head == nullptr)
+			cout << "List is Already Empty!\n";
+		else
+		{
+			Node* temp = head;
+			head = head->next;
+			delete temp;
+			if (head != nullptr)
+				head->prev = nullptr;
+		}
+	}
+	void DeleteFromEnd()
+	{
+		if (head == nullptr)
+			cout << "List is Already Empty!\n";
+		else if (head->next == nullptr)
+		{
+			delete head;
+			head = nullptr;
+		}
+		else
+		{
+			Node* itr = head;
+			while (itr->next->next != nullptr)
+				itr = itr->next;
+			Node* temp = itr->next;
+			itr->next = nullptr;
+			delete temp;
+		}
+	}
+	Node* getHead()
+	{
+		return head;
+	}
+	void Display()
+	{
+		Node* itr = head;
+		while (itr != nullptr)
+		{
+			cout << itr->data << " ";
+			itr = itr->next;
+		}
+	}
 };
